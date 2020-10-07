@@ -1,0 +1,27 @@
+@import url("css/card.css");
+body {
+    font-size: 15pt;
+}
+
+#remaining .bar {
+    position: fixed;
+    top: 0;
+    left: -10px;
+    transition: linear 0.2s all;
+    width: 110%;
+}
+
+#remaining .start {
+    animation-name: progressUp;
+    animation-duration: 11800ms;
+    animation-timing-function: linear;
+}
+
+@keyframes progressUp {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 120%;
+    }
+}

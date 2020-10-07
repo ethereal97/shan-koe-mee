@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodePen - JavaScript Pairs Game</title>
+    <style>
+        /* Variabes */
+        /* Mixin's */
+        
+        body {
+            background: #82d2e5;
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+            height: 100%;
+            color: #fff;
+            text-align: center;
+        }
+        
+        h1,
+        h2 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 100;
+            font-size: 2.6em;
+            text-transform: uppercase;
+        }
+        
+        h3 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 100;
+            font-size: 1.4em;
+            text-transform: uppercase;
+        }
+        
+        #seconds,
+        #tens {
+            font-size: 2em;
+        }
+        
+        button {
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            -khtml-border-radius: 5px;
+            background: #82d2e5;
+            color: #fff;
+            border: solid 1px #fff;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 18px 10px;
+            width: 180px;
+            margin: 10px;
+            outline: none;
+        }
+        
+        button:hover {
+            -webkit-transition: all 0.5s ease-in-out;
+            -moz-transition: all 0.5s ease-in-out;
+            transition: all 0.5s ease-in-out;
+            background: #fff;
+            border: solid 1px #fff;
+            color: #82d2e5;
+        }
+        
+        #container {
+            width: 630px;
+            margin: 10px auto;
+        }
+        
+        #container:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        
+        [data-view="card"] {
+            transform: rotateY(180deg);
+            width: 100px;
+            height: 140px;
+            border: solid 1px #d3cece;
+            border-radius: 5px;
+            float: left;
+            margin: 10px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #f3f3f3 22px, #fff 22px, #fff 24px, transparent 24px, transparent 67px, #fff 67px, #fff 69px, transparent 69px), linear-gradient(225deg, #f3f3f3 22px, #fff 22px, #fff 24px, transparent 24px, transparent 67px, #fff 67px, #fff 69px, transparent 69px) 0 64px;
+            background-color: #f3f3f3;
+            background-size: 64px 128px;
+        }
+        
+        .flipped {
+            transition: 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+            transform: rotateY(0deg);
+        }
+        
+        .reverse {
+            transition: 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+            transform: rotateY(180deg);
+        }
+        
+        .correct {
+            opacity: .5;
+            cursor: default;
+            transform-style: preserve-3d;
+            position: relative;
+            transform: rotateY(0deg);
+        }
+        /* Icons */
+        
+        .correct[data-item="sass"],
+        .flipped[data-item="sass"] {
+            background: url("https://cathydutton.co.uk/assets/img/sass.png") left center no-repeat #fff;
+            background-size: contain;
+        }
+        
+        .correct[data-item="gulp"],
+        .flipped[data-item="gulp"] {
+            background: url("https://cathydutton.co.uk/assets/img/gulp.png") left center no-repeat #fff;
+            background-size: contain;
+        }
+        
+        .correct[data-item="grunt"],
+        .flipped[data-item="grunt"] {
+            background: url("https://cathydutton.co.uk/assets/img/grunt.png") left center no-repeat #fff;
+            background-size: contain;
+        }
+        
+        .correct[data-item="git"],
+        .flipped[data-item="git"] {
+            background: url("https://cathydutton.co.uk/assets/img/git.png") left center no-repeat #fff;
+            background-size: contain;
+        }
+        
+        .correct[data-item="css3"],
+        .flipped[data-item="css3"] {
+            background: url("https://cathydutton.co.uk/assets/img/css3.png") left center no-repeat #fff;
+            background-size: contain;
+        }
+    </style>
+
+    <script>
+        window.console = window.console || function(t) {};
+    </script>
+
+
+
+    <script>
+        if (document.location.search.match(/type=embed/gi)) {
+            window.parent.postMessage("resize", "*");
+        }
+    </script>
+
+
+</head>
+
+<body translate="no">
+    <div class="wrapper">
+        <h1>JavaScript pairs Game</h1>
+        <h3>Click any card to begin</h3>
+        <p><span id="seconds">00</span>:<span id="tens">00</span></p>
+        <p id="text"></p>
+        <div id="container">
+
+        </div>
+    </div>
+
+    <script id="rendered-js">
+        var myCards = document.getElementById('container');
+        var resultsArray = [];
+        var counter = 0;
+        var text = document.getElementById('text');
+        var seconds = 00;
+        var tens = 00;
+        var appendTens = document.getElementById("tens");
+        var appendSeconds = document.getElementById("seconds");
+        var Interval;
+        var images = [
+            'sass',
+            'git',
+            'gulp',
+            'css3',
+            'grunt'
+        ];
+
+
+        var clone = images.slice(0); // duplicate array
+        var cards = images.concat(clone); // merge to arrays 
+
+        // Shufffel function
+        function shuffle(o) {
+            for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+            return o;
+        }
+        shuffle(cards);
+
+        for (var i = 0; i < cards.length; i++) {
+            card = document.createElement('div');
+            card.dataset.item = cards[i];
+            card.dataset.view = "card";
+            myCards.appendChild(card);
+
+            card.onclick = function() {
+
+                if (this.className != 'flipped' && this.className != 'correct') {
+                    this.className = 'flipped';
+                    var result = this.dataset.item;
+                    resultsArray.push(result);
+                    clearInterval(Interval);
+                    Interval = setInterval(startTimer, 10);
+                }
+
+                if (resultsArray.length > 1) {
+
+                    if (resultsArray[0] === resultsArray[1]) {
+                        check("correct");
+                        counter++;
+                        win();
+                        resultsArray = [];
+                    } else {
+                        check("reverse");
+                        resultsArray = [];
+                    }
+
+                }
+
+            };
+
+        };
+
+
+        var check = function(className) {
+
+            var x = document.getElementsByClassName("flipped");
+            setTimeout(function() {
+
+                for (var i = x.length - 1; i >= 0; i--) {
+                    x[i].className = className;
+                }
+
+            }, 500);
+
+        };
+
+        var win = function() {
+
+            if (counter === 5) {
+                clearInterval(Interval);
+                text.innerHTML = "Your time was " + seconds + ":" + tens;
+            }
+
+        };
+
+        function startTimer() {
+            tens++;
+
+            if (tens < 9) {
+                appendTens.innerHTML = "0" + tens;
+            }
+
+            if (tens > 9) {
+                appendTens.innerHTML = tens;
+
+            }
+
+            if (tens > 99) {
+                seconds++;
+                appendSeconds.innerHTML = "0" + seconds;
+                tens = 0;
+                appendTens.innerHTML = "0" + 0;
+            }
+
+            if (seconds > 9) {
+                appendSeconds.innerHTML = seconds;
+            }
+
+        }
+        //# sourceURL=pen.js
+    </script>
+
+
+
+</body>
+
+</html>

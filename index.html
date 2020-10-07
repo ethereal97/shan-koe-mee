@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HTML</title>
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="lib/normalize.css" />
+    <link rel="stylesheet" href="lib/semantic.css" />
+    <link rel="stylesheet" href="style.css">
+    <script src="lib/jquery-3.5.1.min.js"></script>
+    <script src="lib/semantic.js"></script>
+</head>
+
+<body>
+    <div class="ui container">
+        <div class="ui tiny blue progress" id="remaining">
+            <div class="bar"></div>
+        </div>
+        <button class="ui button" id="shuffle">Shuffle</button>
+        <button class="ui primary button" id="draw">Draw</button>
+        <button class="ui secondary button" id="withdraw">Withdraw</button>
+        <div id="drawn-cards"></div>
+    </div>
+
+    <!-- error modal -->
+    <div class="ui basic modal">
+        <div class="ui icon header"></div>
+        <div class="content"></div>
+        <div class="actions" style="visibility:hidden;">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i> No
+            </div>
+            <div class="ui green ok inverted button">
+                <i class="checkmark icon"></i> Yes </div>
+        </div>
+    </div>
+
+    <!-- button onclick="window.game.start()" type="submit">Start</button -->
+
+    <!-- Project -->
+    <script src="main.js"></script>
+</body>
+
+</html>
